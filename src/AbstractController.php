@@ -9,7 +9,6 @@
 namespace Joomla\Controller;
 
 use Joomla\Input\Input;
-use Joomla\Application;
 
 /**
  * Joomla Framework Base Controller Class
@@ -42,7 +41,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @since  1.0
 	 */
-	public function __construct(Input $input = null, Application\AbstractApplication $app = null)
+	public function __construct(Input $input = null, $app = null)
 	{
 		$this->input = $input;
 		$this->app = $app;
@@ -105,7 +104,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @since   1.0
 	 */
-	public function setApplication(Application\AbstractApplication $app)
+	public function setApplication($app)
 	{
 		$this->app = $app;
 

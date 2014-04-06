@@ -8,7 +8,6 @@
 
 namespace Joomla\Controller;
 
-use Joomla\Application;
 use Joomla\Input;
 
 /**
@@ -58,7 +57,7 @@ interface ControllerInterface extends \Serializable
 	 *
 	 * @since   1.0
 	 */
-	public function setApplication(Application\AbstractApplication $app);
+	public function setApplication($app);
 
 	/**
 	 * Set the input object.

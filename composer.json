@@ -19,8 +19,12 @@
     },
     "autoload": {
     	"psr-4": {
-    		"Joomla\\Controller\\": "src/",
-            "Joomla\\Controller\\Tests\\": "Tests/"
+    		"Joomla\\Controller\\": "src/"
     	}
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Joomla\\Controller\\Tests\\": "Tests/"
+        }
     }
 }

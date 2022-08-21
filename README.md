@@ -1,10 +1,15 @@
 # The Controller Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/controller/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/controller)
 
+[![Latest Stable Version](https://poser.pugx.org/joomla/controller/v/stable)](https://packagist.org/packages/joomla/controller)
+[![Total Downloads](https://poser.pugx.org/joomla/controller/downloads)](https://packagist.org/packages/joomla/controller)
+[![Latest Unstable Version](https://poser.pugx.org/joomla/controller/v/unstable)](https://packagist.org/packages/joomla/controller)
+[![License](https://poser.pugx.org/joomla/controller/license)](https://packagist.org/packages/joomla/controller)
+
 ## Interfaces
 
 ### `Controller\ControllerInterface`
 
-`Controller\ControllerInterface` is an interface that requires a class to be implemented with the following methods:\
+`Controller\ControllerInterface` is an interface that requires a class to be implemented with the following methods:
 
 - `execute`
 - `getApplication`

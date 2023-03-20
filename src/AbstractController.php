@@ -38,8 +38,8 @@ abstract class AbstractController implements ControllerInterface
     /**
      * Instantiate the controller.
      *
-     * @param   Input                $input  The input object.
-     * @param   AbstractApplication  $app    The application object.
+     * @param   ?Input                $input  The input object.
+     * @param   ?AbstractApplication  $app    The application object.
      *
      * @since   1.0
      */

@@ -1,4 +1,4 @@
-# The Controller Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/controller/status.svg?ref=refs/heads/3.x-dev)](https://ci.joomla.org/joomla-framework/controller)
+# The Controller Package [![Build Status](https://github.com/joomla-framework/controller/actions/workflows/ci.yml/badge.svg?branch=3.x-dev)](https://github.com/joomla-framework/controller)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/controller/v/stable)](https://packagist.org/packages/joomla/controller)
 [![Total Downloads](https://poser.pugx.org/joomla/controller/downloads)](https://packagist.org/packages/joomla/controller)

@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests for the Joomla\Controller\AbstractController class.
  */
-class AbstractTestController extends TestCase
+class AbstractControllerTest extends TestCase
 {
     /**
      * Object being tested

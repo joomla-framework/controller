@@ -32,7 +32,7 @@ class AbstractControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->instance = $this->getMockForAbstractClass(AbstractController::class);
+        $this->instance = new TestController();
     }
 
     /**
@@ -54,9 +54,8 @@ class AbstractControllerTest extends TestCase
     public function test__constructDependencyInjection()
     {
         $mockInput = $this->createMock(Input::class);
-
-        $mockApp = $this->getMockForAbstractClass(AbstractApplication::class);
-        $object  = $this->getMockForAbstractClass(AbstractController::class, [$mockInput, $mockApp]);
+        $mockApp = $this->createMock(AbstractApplication::class);
+        $object  = new TestController($mockInput, $mockApp);
 
         $this->assertSame($mockApp, $object->getApplication());
         $this->assertSame($mockInput, $object->getInput());
@@ -69,7 +68,7 @@ class AbstractControllerTest extends TestCase
      */
     public function testSetAndGetApplication()
     {
-        $mockApp = $this->getMockForAbstractClass(AbstractApplication::class);
+        $mockApp = $this->createMock(AbstractApplication::class);
 
         $this->assertSame($this->instance, $this->instance->setApplication($mockApp), 'The setApplication method has a fluent interface');
         $this->assertSame($mockApp, $this->instance->getApplication());
@@ -86,5 +85,20 @@ class AbstractControllerTest extends TestCase
 
         $this->assertSame($this->instance, $this->instance->setInput($mockInput), 'The setInput method has a fluent interface');
         $this->assertSame($mockInput, $this->instance->getInput());
+    }
+}
+
+/**
+ * Class TestController
+ *
+ * To have an instance of the class to test
+ *
+ * @package  Joomla\Controller\Tests
+ * @since    1.0
+ */
+class TestController extends AbstractController {
+    public function execute()
+    {
+        // TODO: Implement execute() method.
     }
 }

@@ -82,7 +82,8 @@ class AbstractControllerTest extends TestCase
  * @package  Joomla\Controller\Tests
  * @since    1.0
  */
-class TestController extends AbstractController {
+class TestController extends AbstractController
+{
     public function execute()
     {
         // TODO: Implement execute() method.

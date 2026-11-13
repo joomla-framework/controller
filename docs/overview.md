@@ -25,7 +25,7 @@ interface ControllerInterface
      * @throws  \LogicException
      * @throws  \RuntimeException
      */
-    public function execute();
+    public function execute(): bool;
 }
 ```
 
@@ -38,13 +38,11 @@ leave the response to the caller.
 `AbstractController` stores an application and an input object and exposes them to subclasses:
 
 ```php
-use Joomla\Application\AbstractApplication;
 use Joomla\Controller\AbstractController;
-use Joomla\Input\Input;
 
 final class DisplayController extends AbstractController
 {
-    public function execute()
+    public function execute(): bool
     {
         $id = $this->getInput()->getUint('id');
 
@@ -66,11 +64,11 @@ $controller->execute();
 
 | Method | Returns | Notes |
 |---|---|---|
-| `__construct(?Input $input = null, ?AbstractApplication $app = null)` | | Both arguments are optional |
-| `getApplication()` | `AbstractApplication\|null` | |
-| `setApplication(AbstractApplication $app)` | `$this` | Fluent |
-| `getInput()` | `Input\|null` | |
-| `setInput(Input $input)` | `$this` | Fluent |
+| `__construct(?Input $input = null, ?ApplicationInterface $app = null)` | | Both arguments are optional |
+| `getApplication(): ApplicationInterface` | `ApplicationInterface` | Throws `UnexpectedValueException` if no application is set |
+| `setApplication(ApplicationInterface $app): static` | `$this` | Fluent |
+| `getInput(): Input` | `Input` | Throws `UnexpectedValueException` if no input object is set |
+| `setInput(Input $input): static` | `$this` | Fluent |
 
 ## Things to know before you build on this
 
@@ -83,30 +81,16 @@ alongside:
 composer require joomla/controller joomla/application joomla/input
 ```
 
-**The getters can return `null`.** The constructor accepts `null` for both dependencies and the
-getters hand that `null` straight back. A controller written as
-`$this->getInput()->getUint('id')` therefore fails with *Call to a member function on null* when
-the controller was built without an input object. Either always pass both dependencies, or guard:
+**The getters throw when the dependency is missing.** The constructor accepts `null` for both
+dependencies, but `getApplication()` and `getInput()` throw an `UnexpectedValueException` naming
+the controller class when nothing was set, as the traits in `joomla/model` do. Either always pass
+both dependencies, or check with `hasApplication()` / `hasInput()` before calling a getter.
 
-```php
-public function execute()
-{
-    $input = $this->getInput();
-
-    if ($input === null) {
-        throw new \LogicException('No input object was set on ' . static::class);
-    }
-
-    // …
-}
-```
-
-Note that `joomla/model` solves the same problem the other way round — its traits throw an
-`UnexpectedValueException` from the getter. This package does not.
-
-**`AbstractApplication` is a class, not an interface.** `setApplication()` accepts only
-`Joomla\Application\AbstractApplication` or a subclass. An application that implements
-`Joomla\Application\ApplicationInterface` without extending the abstract class cannot be used.
+**The application is typed against `ApplicationInterface`.** Any application implementing
+`Joomla\Application\ApplicationInterface` can be injected, not only subclasses of
+`AbstractApplication`. `getApplication()` is declared to return the interface, so static analysers
+expect you to narrow it with `instanceof` (for example to `WebApplicationInterface`) before calling
+methods that only a more specific application has, such as `setBody()` in the example above.
 
 ## Using controllers with the Application package
 
@@ -120,7 +104,9 @@ $router->get('/articles/:id', DisplayController::class, ['id' => '\d+']);
 
 Because the resolver instantiates with `new $class()`, a controller resolved this way must have a
 constructor with no required arguments — or must come from a container via
-`ContainerControllerResolver`. See the `joomla/application` documentation for the details.
+`ContainerControllerResolver`. Such a controller is built without an input object or application,
+so its getters throw until it sets them itself. See the `joomla/application` documentation for the
+details.
 
 ## What this package does not do
 

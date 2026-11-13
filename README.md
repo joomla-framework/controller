@@ -1,76 +1,52 @@
-# The Controller Package [![Build Status](https://github.com/joomla-framework/controller/actions/workflows/ci.yml/badge.svg?branch=3.x-dev)](https://github.com/joomla-framework/controller)
+# The Controller Package [![Build Status](https://github.com/joomla-framework/controller/actions/workflows/ci.yml/badge.svg?branch=4.x-dev)](https://github.com/joomla-framework/controller)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/controller/v/stable)](https://packagist.org/packages/joomla/controller)
 [![Total Downloads](https://poser.pugx.org/joomla/controller/downloads)](https://packagist.org/packages/joomla/controller)
 [![Latest Unstable Version](https://poser.pugx.org/joomla/controller/v/unstable)](https://packagist.org/packages/joomla/controller)
 [![License](https://poser.pugx.org/joomla/controller/license)](https://packagist.org/packages/joomla/controller)
 
-## Interfaces
+The Controller package defines what a controller is in the Joomla Framework: an object with a single `execute()`
+method. It ships one interface and one abstract base class.
 
-### `Controller\ControllerInterface`
+| Class | Purpose |
+|---|---|
+| `Joomla\Controller\ControllerInterface` | The contract: `execute()`, returning `true` if the controller finished execution and `false` if it did not |
+| `Joomla\Controller\AbstractController` | A base class holding a `Joomla\Input\Input` and a `Joomla\Application\AbstractApplication` object |
 
-`Controller\ControllerInterface` is an interface that requires a class to be implemented with the following methods:
+## Usage
 
-- `execute`
-- `getApplication`
-- `getInput`
-- `setApplication`
-- `setInput`
-
-## Classes
-
-### `Controller\AbstractController`
-
-#### Construction
-
-The constructor for `Controller\AbstractController` takes an optional `Joomla\Input\Input` object and an optional `Joomla\Application\AbstractApplication` object. One or the other can be omitted but using `getApplication` or `getInput` without setting them will throw an exception.
-
-#### Usage
-
-The `Controller\AbstractController` class is abstract so cannot be used directly. The derived class must implement the execute method to satisfy the interface requirements. Note that the execute method no longer takes a "task" argument as each controller class. Multi-task controllers are still possible by overriding the execute method in derived classes. Each controller class should do just one sort of 'thing', such as saving, deleting, checking in, checking out and so on. However, controllers, or even models and views, have the liberty of invoking other controllers to allow for HMVC architectures.
+`AbstractController` takes the input and the application as optional constructor arguments, and has the
+setters `setInput()` / `setApplication()` and the getters `getInput()` / `getApplication()`. A subclass only has
+to implement `execute()`:
 
 ```php
-namespace Examples;
+use Joomla\Controller\AbstractController;
 
-use Joomla\Application;
-use Joomla\Input;
-
-/**
- * My custom controller.
- *
- * @since  1.0
- */
-class MyController extends Controller\Base
+final class DisplayController extends AbstractController
 {
-	/**
-	 * Executes the controller.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 */
-	public function execute()
-	{
-		echo time();
-	}
+    public function execute()
+    {
+        $id = $this->getInput()->getUint('id');
+
+        if ($id === 0) {
+            return false;
+        }
+
+        $this->getApplication()->setBody('Article ' . $id);
+
+        return true;
+    }
 }
 
-// We'll assume we've already defined an application in this namespace.
-$app = new ExampleApplication;
-$input = new Input\Input;
-
-// Instantiate the controller.
-$controller = new MyController($input, $app);
-
-// Print the time.
+$controller = new DisplayController($input, $app);
 $controller->execute();
 ```
 
-#### Serialization
+There is no task mapping: each controller does one thing, and `execute()` takes no arguments. Route targets are
+resolved to controllers by `joomla/application`'s `ControllerResolver`.
 
-The `Controller\AbstractController` class implements `Serializable`. When serializing, only the input property is serialized. When unserializing, the input variable is unserialized and the internal application property is loaded at runtime.
-
+See the [documentation](docs/index.md) for details, including what the getters return when no dependency was
+set, and the update guides in `docs/` when upgrading between major versions.
 
 ## Installation via Composer
 

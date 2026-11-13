@@ -27,5 +27,5 @@ interface ControllerInterface
      * @throws  \LogicException
      * @throws  \RuntimeException
      */
-    public function execute();
+    public function execute(): bool;
 }

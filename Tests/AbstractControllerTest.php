@@ -8,6 +8,7 @@
 namespace Joomla\Controller\Tests;
 
 use Joomla\Application\AbstractApplication;
+use Joomla\Application\ApplicationInterface;
 use Joomla\Controller\AbstractController;
 use Joomla\Input\Input;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -37,11 +38,22 @@ class AbstractControllerTest extends TestCase
         $this->instance = new TestController();
     }
 
-    #[TestDox('Tests the controller is instantiated correctly')]
-    public function test__constructDefaultBehaviour()
+    #[TestDox('Tests getting the application before it is set throws an exception')]
+    public function testGetApplicationWithoutApplicationThrows()
     {
-        $this->assertNull($this->instance->getApplication());
-        $this->assertNull($this->instance->getInput());
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Application not set in ' . TestController::class);
+
+        $this->instance->getApplication();
+    }
+
+    #[TestDox('Tests getting the input before it is set throws an exception')]
+    public function testGetInputWithoutInputThrows()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Input object not set in ' . TestController::class);
+
+        $this->instance->getInput();
     }
 
     #[TestDox('Tests the controller is instantiated correctly')]
@@ -64,6 +76,16 @@ class AbstractControllerTest extends TestCase
         $this->assertSame($mockApp, $this->instance->getApplication());
     }
 
+    #[TestDox('Tests an application that only implements ApplicationInterface is accepted')]
+    public function testSetAndGetApplicationInterface()
+    {
+        $mockApp = $this->createStub(ApplicationInterface::class);
+        $object  = new TestController(null, $mockApp);
+
+        $this->assertSame($mockApp, $object->getApplication());
+        $this->assertSame($object, $object->setApplication($mockApp));
+    }
+
     #[TestDox('Tests an input object is injected into the controller and retrieved correctly')]
     public function testSetAndGetInput()
     {
@@ -84,8 +106,8 @@ class AbstractControllerTest extends TestCase
  */
 class TestController extends AbstractController
 {
-    public function execute()
+    public function execute(): bool
     {
-        // TODO: Implement execute() method.
+        return true;
     }
 }

@@ -9,7 +9,7 @@
 
 namespace Joomla\Controller;
 
-use Joomla\Application\AbstractApplication;
+use Joomla\Application\ApplicationInterface;
 use Joomla\Input\Input;
 
 /**
@@ -22,28 +22,28 @@ abstract class AbstractController implements ControllerInterface
     /**
      * The application object.
      *
-     * @var    AbstractApplication
+     * @var    ApplicationInterface|null
      * @since  1.0
      */
-    private $app;
+    private ?ApplicationInterface $app = null;
 
     /**
      * The input object.
      *
-     * @var    Input
+     * @var    Input|null
      * @since  1.0
      */
-    private $input;
+    private ?Input $input = null;
 
     /**
      * Instantiate the controller.
      *
-     * @param   ?Input                $input  The input object.
-     * @param   ?AbstractApplication  $app    The application object.
+     * @param   ?Input                 $input  The input object.
+     * @param   ?ApplicationInterface  $app    The application object.
      *
      * @since   1.0
      */
-    public function __construct(?Input $input = null, ?AbstractApplication $app = null)
+    public function __construct(?Input $input = null, ?ApplicationInterface $app = null)
     {
         $this->input = $input;
         $this->app   = $app;
@@ -52,37 +52,47 @@ abstract class AbstractController implements ControllerInterface
     /**
      * Get the application object.
      *
-     * @return  AbstractApplication|null
+     * @return  ApplicationInterface
      *
      * @since   1.0
+     * @throws  \UnexpectedValueException if the application has not been set.
      */
-    public function getApplication()
+    public function getApplication(): ApplicationInterface
     {
+        if ($this->app === null) {
+            throw new \UnexpectedValueException('Application not set in ' . static::class);
+        }
+
         return $this->app;
     }
 
     /**
      * Get the input object.
      *
-     * @return  Input|null
+     * @return  Input
      *
      * @since   1.0
+     * @throws  \UnexpectedValueException if the input object has not been set.
      */
-    public function getInput()
+    public function getInput(): Input
     {
+        if ($this->input === null) {
+            throw new \UnexpectedValueException('Input object not set in ' . static::class);
+        }
+
         return $this->input;
     }
 
     /**
      * Set the application object.
      *
-     * @param   AbstractApplication  $app  The application object.
+     * @param   ApplicationInterface  $app  The application object.
      *
      * @return  $this
      *
      * @since   1.0
      */
-    public function setApplication(AbstractApplication $app)
+    public function setApplication(ApplicationInterface $app): static
     {
         $this->app = $app;
 
@@ -98,7 +108,7 @@ abstract class AbstractController implements ControllerInterface
      *
      * @since   1.0
      */
-    public function setInput(Input $input)
+    public function setInput(Input $input): static
     {
         $this->input = $input;
 

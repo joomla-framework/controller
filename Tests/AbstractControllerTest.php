@@ -11,6 +11,7 @@ use Joomla\Application\AbstractApplication;
 use Joomla\Controller\AbstractController;
 use Joomla\Input\Input;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
@@ -38,9 +39,30 @@ class AbstractControllerTest extends TestCase
     }
 
     #[TestDox('Tests the controller is instantiated correctly')]
+    #[IgnoreDeprecations]
     public function test__constructDefaultBehaviour()
     {
+        $this->assertFalse($this->instance->hasApplication());
+        $this->assertFalse($this->instance->hasInput());
         $this->assertNull($this->instance->getApplication());
+        $this->assertNull($this->instance->getInput());
+    }
+
+    #[TestDox('Tests getting the application before it is set triggers a deprecation')]
+    #[IgnoreDeprecations]
+    public function testGetApplicationWithoutApplicationIsDeprecated()
+    {
+        $this->expectUserDeprecationMessageMatches('/getApplication\(\) without an application set is deprecated/');
+
+        $this->assertNull($this->instance->getApplication());
+    }
+
+    #[TestDox('Tests getting the input before it is set triggers a deprecation')]
+    #[IgnoreDeprecations]
+    public function testGetInputWithoutInputIsDeprecated()
+    {
+        $this->expectUserDeprecationMessageMatches('/getInput\(\) without an input object set is deprecated/');
+
         $this->assertNull($this->instance->getInput());
     }
 
@@ -51,6 +73,8 @@ class AbstractControllerTest extends TestCase
         $mockApp   = $this->createStub(AbstractApplication::class);
         $object    = new TestController($mockInput, $mockApp);
 
+        $this->assertTrue($object->hasApplication());
+        $this->assertTrue($object->hasInput());
         $this->assertSame($mockApp, $object->getApplication());
         $this->assertSame($mockInput, $object->getInput());
     }

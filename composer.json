@@ -6,19 +6,15 @@
     "homepage": "https://github.com/joomla-framework/controller",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^8.3.0"
+        "php": "^8.3.0",
+        "joomla/application": "^4.0",
+        "joomla/input": "^4.0"
     },
     "require-dev": {
-        "joomla/application": "^4.0",
-        "joomla/input": "^4.0",
         "phpunit/phpunit": "^12.5 || ^13.0",
         "squizlabs/php_codesniffer": "^4.0",
         "phpstan/phpstan": "^2.1.17",
         "phpstan/phpstan-deprecation-rules": "^2.0.3"
-    },
-    "suggest": {
-        "joomla/application": "The joomla/application package is required to use Joomla\\Controller\\AbstractController",
-        "joomla/input": "The joomla/input package is required to use Joomla\\Controller\\AbstractController"
     },
     "autoload": {
         "psr-4": {

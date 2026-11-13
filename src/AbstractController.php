@@ -52,17 +52,34 @@ abstract class AbstractController implements ControllerInterface
     /**
      * Get the application object.
      *
+     * Calling this method while no application is set is deprecated: it returns null in 4.x and will throw an
+     * UnexpectedValueException in 5.0. Use hasApplication() to check first.
+     *
      * @return  AbstractApplication|null
      *
      * @since   1.0
      */
     public function getApplication()
     {
+        if ($this->app === null) {
+            trigger_deprecation(
+                'joomla/controller',
+                '__DEPLOY_VERSION__',
+                'Calling %s::getApplication() without an application set is deprecated and will throw an %s in 5.0.'
+                . ' Use hasApplication() to check whether an application is set.',
+                static::class,
+                \UnexpectedValueException::class
+            );
+        }
+
         return $this->app;
     }
 
     /**
      * Get the input object.
+     *
+     * Calling this method while no input object is set is deprecated: it returns null in 4.x and will throw an
+     * UnexpectedValueException in 5.0. Use hasInput() to check first.
      *
      * @return  Input|null
      *
@@ -70,7 +87,42 @@ abstract class AbstractController implements ControllerInterface
      */
     public function getInput()
     {
+        if ($this->input === null) {
+            trigger_deprecation(
+                'joomla/controller',
+                '__DEPLOY_VERSION__',
+                'Calling %s::getInput() without an input object set is deprecated and will throw an %s in 5.0.'
+                . ' Use hasInput() to check whether an input object is set.',
+                static::class,
+                \UnexpectedValueException::class
+            );
+        }
+
         return $this->input;
+    }
+
+    /**
+     * Check whether an application object is set.
+     *
+     * @return  boolean
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function hasApplication(): bool
+    {
+        return $this->app !== null;
+    }
+
+    /**
+     * Check whether an input object is set.
+     *
+     * @return  boolean
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function hasInput(): bool
+    {
+        return $this->input !== null;
     }
 
     /**

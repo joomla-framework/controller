@@ -67,9 +67,11 @@ $controller->execute();
 | Method | Returns | Notes |
 |---|---|---|
 | `__construct(?Input $input = null, ?AbstractApplication $app = null)` | | Both arguments are optional |
-| `getApplication()` | `AbstractApplication\|null` | |
+| `getApplication()` | `AbstractApplication\|null` | Calling it without an application set is deprecated |
+| `hasApplication()` | `bool` | Whether an application is set |
 | `setApplication(AbstractApplication $app)` | `$this` | Fluent |
-| `getInput()` | `Input\|null` | |
+| `getInput()` | `Input\|null` | Calling it without an input object set is deprecated |
+| `hasInput()` | `bool` | Whether an input object is set |
 | `setInput(Input $input)` | `$this` | Fluent |
 
 ## Things to know before you build on this
@@ -83,26 +85,28 @@ alongside:
 composer require joomla/controller joomla/application joomla/input
 ```
 
-**The getters can return `null`.** The constructor accepts `null` for both dependencies and the
-getters hand that `null` straight back. A controller written as
+**The getters can return `null` — and that is deprecated.** The constructor accepts `null` for
+both dependencies and the getters hand that `null` straight back. A controller written as
 `$this->getInput()->getUint('id')` therefore fails with *Call to a member function on null* when
-the controller was built without an input object. Either always pass both dependencies, or guard:
+the controller was built without an input object.
+
+Calling `getApplication()` or `getInput()` while the dependency is not set triggers a deprecation
+notice since 4.1. In 5.0 the getters will throw an `UnexpectedValueException` instead, as the
+traits in `joomla/model` already do. Either always pass both dependencies, or check with
+`hasApplication()` / `hasInput()` first:
 
 ```php
 public function execute()
 {
-    $input = $this->getInput();
-
-    if ($input === null) {
+    if (!$this->hasInput()) {
         throw new \LogicException('No input object was set on ' . static::class);
     }
+
+    $id = $this->getInput()->getUint('id');
 
     // …
 }
 ```
-
-Note that `joomla/model` solves the same problem the other way round — its traits throw an
-`UnexpectedValueException` from the getter. This package does not.
 
 **`AbstractApplication` is a class, not an interface.** `setApplication()` accepts only
 `Joomla\Application\AbstractApplication` or a subclass. An application that implements

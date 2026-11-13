@@ -74,10 +74,9 @@ $controller->execute();
 
 ## Things to know before you build on this
 
-**The dependencies are optional at install time but mandatory at runtime.** `joomla/application`
-and `joomla/input` are listed under `suggest`, not `require`. `AbstractController` type hints both,
-so installing this package alone gives you a class that cannot be instantiated. Install them
-alongside:
+**The package depends on `joomla/application` and `joomla/input`.** `AbstractController` type
+hints both, so they are in `require` and Composer installs them alongside since 4.1. In 4.0 they
+were only listed under `suggest`; on that release install them explicitly:
 
 ```bash
 composer require joomla/controller joomla/application joomla/input

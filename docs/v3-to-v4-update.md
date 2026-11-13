@@ -32,5 +32,6 @@ The optional packages in `suggest` moved to their 4.x releases:
 | `joomla/application` | `^3.0` | `^4.0` |
 | `joomla/input` | `^3.0` | `^4.0` |
 
-Both remain in `suggest` rather than `require`, even though `AbstractController` type hints them.
-Install them explicitly — see [the overview](overview.md#things-to-know-before-you-build-on-this).
+In 4.0 both remain in `suggest` rather than `require`, even though `AbstractController` type hints
+them, so install them explicitly. From 4.1 on they are in `require` — see
+[the overview](overview.md#things-to-know-before-you-build-on-this).
